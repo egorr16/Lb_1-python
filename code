@@ -1,0 +1,31 @@
+import requests
+
+url = "https://catfact.ninja/fact?max_length=140"
+response = requests.get(url)
+
+if response.status_code == 200:
+    jsonData = response.json()
+    quote = jsonData["fact"]
+
+    print("Факт про котів:", end="")
+    print(f"\n{quote}")
+
+    with open("quote.txt", 'a', encoding="utf-8") as file:
+        file.write(quote + "\n")
+    print("Congrats bro, your quote is in file")
+else:
+    print("You don't deserve cats")
+
+script:
+def count_words_in_file(file_name):
+    try:
+        with open(file_name, 'r', encoding="utf-8") as file:
+            content = file.read()
+            words_list = content.split()
+            word_count = len(words_list)
+            return word_count
+    except FileNotFoundError:
+        print("File not found bro")
+
+word_count = count_words_in_file("quote.txt")
+print(f"Кількість слів у файлі 'quote.txt': {word_count}")
